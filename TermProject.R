@@ -48,23 +48,41 @@ makeLinearModelMatrix <- function() {
     }
   }
 
-  day1LMMatrix <- data.frame(mnth=day1relevant[,1], isGood=weathersitMatrix[,1], isModerate=weathersitMatrix[,2], isBad=weathersitMatrix[,3], isTerrible=weathersitMatrix[,4], temp=day1relevant[,3], atemp=day1relevant[,4], hum=day1relevant[,5], windspeed=day1relevant[,6], tot=day1relevant[,7])
+  day1LMMatrix <- data.frame(mnth=day1relevant[,1], mnth_sq=(day1relevant[,1]^2), isGood=weathersitMatrix[,1], isModerate=weathersitMatrix[,2], isBad=weathersitMatrix[,3], isTerrible=weathersitMatrix[,4], temp=day1relevant[,3], atemp=day1relevant[,4], hum=day1relevant[,5], windspeed=day1relevant[,6], tot=day1relevant[,7])
   return(day1LMMatrix)
 }
 
-linearModel <- function(target) {
+linearModelTrain <- function(target) {
   if (target == "temp") {
-    summary(lm(day1LMMatrix$temp ~ day1LMMatrix$atemp + day1LMMatrix$tot + day1LMMatrix$mnth^2))
+    summary(lm(day1LMMatrix$temp ~ day1LMMatrix$atemp + day1LMMatrix$tot + day1LMMatrix$mnth_sq))
   } else if (target == "atemp") {
-    summary(lm(day1LMMatrix$atemp ~ day1LMMatrix$temp + day1LMMatrix$tot + day1LMMatrix$mnth^2))
+    summary(lm(day1LMMatrix$atemp ~ day1LMMatrix$temp + day1LMMatrix$tot + day1LMMatrix$mnth_sq))
   } else if (target == "hum") {
     summary(lm(day1LMMatrix$hum ~ day1LMMatrix$windspeed + day1LMMatrix$isGood + day1LMMatrix$isModerate + day1LMMatrix$isBad))
   } else if (target == "windspeed") {
     summary(lm(day1LMMatrix$windspeed ~ day1LMMatrix$hum))
   } else if (target == "weathersit") {
-    summary(lm(day1LMMatrix$isGood ~ day1LMMatrix$hum))
-    summary(lm(day1LMMatrix$isModerate ~ day1LMMatrix$hum))
-    summary(lm(day1LMMatrix$isBad ~ day1LMMatrix$hum))
+    print(summary(lm(day1LMMatrix$isGood ~ day1LMMatrix$hum)))
+    print(summary(lm(day1LMMatrix$isModerate ~ day1LMMatrix$hum)))
+    print(summary(lm(day1LMMatrix$isBad ~ day1LMMatrix$hum)))
+  } else {
+    print("Invalid target variable")
+  }
+}
+
+linearModelTrainV2 <- function(target) {
+  if (target == "temp") {
+    summary(lm(day1LMMatrix$temp ~ day1LMMatrix$atemp))
+  } else if (target == "atemp") {
+    summary(lm(day1LMMatrix$atemp ~ day1LMMatrix$temp + day1LMMatrix$tot + day1LMMatrix$mnth_sq))
+  } else if (target == "hum") {
+    summary(lm(day1LMMatrix$hum ~ day1LMMatrix$windspeed + day1LMMatrix$isGood + day1LMMatrix$isModerate + day1LMMatrix$isBad))
+  } else if (target == "windspeed") {
+    summary(lm(day1LMMatrix$windspeed ~ day1LMMatrix$hum))
+  } else if (target == "weathersit") {
+    print(summary(lm(day1LMMatrix$isGood ~ day1LMMatrix$hum)))
+    print(summary(lm(day1LMMatrix$isModerate ~ day1LMMatrix$hum)))
+    print(summary(lm(day1LMMatrix$isBad ~ day1LMMatrix$hum)))
   } else {
     print("Invalid target variable")
   }
