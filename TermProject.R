@@ -54,15 +54,17 @@ makeLinearModelMatrix <- function() {
 
 linearModel <- function(target) {
   if (target == "temp") {
-    summary(lm(day1relevant$temp ~ day1relevant$atemp + day1relevant$tot + day1relevant$mnth^2))
+    summary(lm(day1LMMatrix$temp ~ day1LMMatrix$atemp + day1LMMatrix$tot + day1LMMatrix$mnth^2))
   } else if (target == "atemp") {
-    summary(lm(day1relevant$atemp ~ day1relevant$temp + day1relevant$tot + day1relevant$mnth^2))
+    summary(lm(day1LMMatrix$atemp ~ day1LMMatrix$temp + day1LMMatrix$tot + day1LMMatrix$mnth^2))
   } else if (target == "hum") {
-    summary(lm(day1relevant$hum ~ day1relevant$windspeed + day1relevant$weathersit))
+    summary(lm(day1LMMatrix$hum ~ day1LMMatrix$windspeed + day1LMMatrix$isGood + day1LMMatrix$isModerate + day1LMMatrix$isBad))
   } else if (target == "windspeed") {
-    summary(lm(day1relevant$temp ~ day1relevant$atemp + day1relevant$tot + day1relevant$mnth^2))
+    summary(lm(day1LMMatrix$windspeed ~ day1LMMatrix$hum))
   } else if (target == "weathersit") {
-    summary(lm(day1relevant$temp ~ day1relevant$atemp + day1relevant$tot + day1relevant$mnth^2))
+    summary(lm(day1LMMatrix$isGood ~ day1LMMatrix$hum))
+    summary(lm(day1LMMatrix$isModerate ~ day1LMMatrix$hum))
+    summary(lm(day1LMMatrix$isBad ~ day1LMMatrix$hum))
   } else {
     print("Invalid target variable")
   }
