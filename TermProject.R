@@ -61,10 +61,12 @@ linearModelTrain <- function(target) {
     summary(lm(day1LMMatrix$hum ~ day1LMMatrix$windspeed + day1LMMatrix$isGood + day1LMMatrix$isModerate + day1LMMatrix$isBad))
   } else if (target == "windspeed") {
     summary(lm(day1LMMatrix$windspeed ~ day1LMMatrix$hum))
-  } else if (target == "weathersit") {
-    print(summary(lm(day1LMMatrix$isGood ~ day1LMMatrix$hum)))
-    print(summary(lm(day1LMMatrix$isModerate ~ day1LMMatrix$hum)))
-    print(summary(lm(day1LMMatrix$isBad ~ day1LMMatrix$hum)))
+  } else if (target == "isGood") {
+    summary(lm(day1LMMatrix$isGood ~ day1LMMatrix$hum))
+  } else if (target == "isModerate") {
+    summary(lm(day1LMMatrix$isModerate ~ day1LMMatrix$hum))
+  } else if (target == "isBad") {
+    summary(lm(day1LMMatrix$isBad ~ day1LMMatrix$hum))
   } else {
     print("Invalid target variable")
   }
@@ -74,15 +76,62 @@ linearModelTrainV2 <- function(target) {
   if (target == "temp") {
     summary(lm(day1LMMatrix$temp ~ day1LMMatrix$atemp))
   } else if (target == "atemp") {
-    summary(lm(day1LMMatrix$atemp ~ day1LMMatrix$temp + day1LMMatrix$tot + day1LMMatrix$mnth_sq))
+    summary(lm(day1LMMatrix$atemp ~ day1LMMatrix$temp + day1LMMatrix$tot))
   } else if (target == "hum") {
     summary(lm(day1LMMatrix$hum ~ day1LMMatrix$windspeed + day1LMMatrix$isGood + day1LMMatrix$isModerate + day1LMMatrix$isBad))
   } else if (target == "windspeed") {
     summary(lm(day1LMMatrix$windspeed ~ day1LMMatrix$hum))
-  } else if (target == "weathersit") {
-    print(summary(lm(day1LMMatrix$isGood ~ day1LMMatrix$hum)))
-    print(summary(lm(day1LMMatrix$isModerate ~ day1LMMatrix$hum)))
-    print(summary(lm(day1LMMatrix$isBad ~ day1LMMatrix$hum)))
+  } else if (target == "isGood") {
+    summary(lm(day1LMMatrix$isGood ~ day1LMMatrix$hum))
+  } else if (target == "isModerate") {
+    summary(lm(day1LMMatrix$isModerate ~ day1LMMatrix$hum))
+  } else if (target == "isBad") {
+    summary(lm(day1LMMatrix$isBad ~ day1LMMatrix$hum))
+  } else {
+    print("Invalid target variable")
+  }
+}
+
+
+
+basicKNNTrain <- function(target) {
+  day1KNNTrain <- day1LMMatrix[1:631,]
+  day1KNNValid <- day1LMMatrix[632:731,]
+  if (target == "temp") {
+    day1x <- day1KNNTrain[,c(2,8,11)]
+    temp <- day1KNNTrain$temp
+    knnout <- basicKNN(day1x,temp,c(day1KNNValid[1,2], day1KNNValid[1,8],day1KNNValid[1,11]),2)
+    knnout
+  } else if (target == "atemp") {
+    day1x <- day1KNNTrain[,c(2,7,11)]
+    atemp <- day1KNNTrain$atemp
+    knnout <- basicKNN(day1x,atemp,c(day1KNNValid[1,2], day1KNNValid[1,7],day1KNNValid[1,11]),2)
+    knnout  
+  } else if (target == "hum") {
+    day1x <- day1KNNTrain[,c(3:5,10)]
+    hum <- day1KNNTrain$hum
+    knnout <- basicKNN(day1x,hum,c(day1KNNValid[1,3], day1KNNValid[1,4], day1KNNValid[1,5], day1KNNValid[1,10]),2)
+    knnout
+  } else if (target == "windspeed") {
+    day1x <- day1KNNTrain$hum
+    windspeed <- day1KNNTrain$windspeed
+    knnout <- basicKNN(day1x,windspeed,c(day1KNNValid[1,9]),2)
+    knnout 
+  } else if (target == "isGood") {
+    day1x <- day1KNNTrain$hum
+    isG <- day1KNNTrain$isGood
+    knnout <- basicKNN(day1x,isG,c(day1KNNValid[1,9]),2)
+    knnout 
+  } else if (target == "isModerate") {
+    day1x <- day1KNNTrain$hum
+    isM <- day1KNNTrain$isModerate
+    knnout <- basicKNN(day1x,isM,c(day1KNNValid[1,9]),2)
+    knnout 
+  } else if (target == "isBad") {
+    day1x <- day1KNNTrain$hum
+    isB <- day1KNNTrain$isBad
+    knnout <- basicKNN(day1x,isB,c(day1KNNValid[1,9]),2)
+    knnout 
   } else {
     print("Invalid target variable")
   }
