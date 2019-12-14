@@ -100,38 +100,110 @@ basicKNNTrain <- function(target) {
   if (target == "temp") {
     day1x <- day1KNNTrain[,c(2,8,11)]
     temp <- day1KNNTrain$temp
-    knnout <- basicKNN(day1x,temp,c(day1KNNValid[1,2], day1KNNValid[1,8],day1KNNValid[1,11]),2)
+    knnout <- basicKNN(day1x,temp,c(day1KNNValid[1,2], day1KNNValid[1,8],day1KNNValid[1,11]),3)
     knnout
   } else if (target == "atemp") {
     day1x <- day1KNNTrain[,c(2,7,11)]
     atemp <- day1KNNTrain$atemp
-    knnout <- basicKNN(day1x,atemp,c(day1KNNValid[1,2], day1KNNValid[1,7],day1KNNValid[1,11]),2)
+    knnout <- basicKNN(day1x,atemp,c(day1KNNValid[1,2], day1KNNValid[1,7],day1KNNValid[1,11]),3)
     knnout  
   } else if (target == "hum") {
     day1x <- day1KNNTrain[,c(3:5,10)]
     hum <- day1KNNTrain$hum
-    knnout <- basicKNN(day1x,hum,c(day1KNNValid[1,3], day1KNNValid[1,4], day1KNNValid[1,5], day1KNNValid[1,10]),2)
+    knnout <- basicKNN(day1x,hum,c(day1KNNValid[1,3], day1KNNValid[1,4], day1KNNValid[1,5], day1KNNValid[1,10]),3)
     knnout
   } else if (target == "windspeed") {
     day1x <- day1KNNTrain$hum
     windspeed <- day1KNNTrain$windspeed
-    knnout <- basicKNN(day1x,windspeed,c(day1KNNValid[1,9]),2)
+    knnout <- basicKNN(day1x,windspeed,c(day1KNNValid[1,9]),3)
     knnout 
   } else if (target == "isGood") {
     day1x <- day1KNNTrain$hum
     isG <- day1KNNTrain$isGood
-    knnout <- basicKNN(day1x,isG,c(day1KNNValid[1,9]),2)
+    knnout <- basicKNN(day1x,isG,c(day1KNNValid[1,9]),3)
     knnout 
   } else if (target == "isModerate") {
     day1x <- day1KNNTrain$hum
     isM <- day1KNNTrain$isModerate
-    knnout <- basicKNN(day1x,isM,c(day1KNNValid[1,9]),2)
+    knnout <- basicKNN(day1x,isM,c(day1KNNValid[1,9]),3)
     knnout 
   } else if (target == "isBad") {
     day1x <- day1KNNTrain$hum
     isB <- day1KNNTrain$isBad
-    knnout <- basicKNN(day1x,isB,c(day1KNNValid[1,9]),2)
+    knnout <- basicKNN(day1x,isB,c(day1KNNValid[1,9]),3)
     knnout 
+  } else {
+    print("Invalid target variable")
+  }
+}
+
+basicKNNValid <- function(target) {
+  day1KNNTrain <- day1LMMatrix[1:631,]
+  day1KNNValid <- day1LMMatrix[632:731,]
+  
+  if (target == "temp") {
+    day1x <- day1KNNTrain[,c(2,8,11)]
+    temp <- day1KNNTrain$temp
+    temps <- c()
+    for (i in 1:100) {
+      knnout <- basicKNN(day1x,temp,c(day1KNNValid[i,2], day1KNNValid[i,8],day1KNNValid[i,11]),3)
+      temps <- c(temps, knnout[[2]])
+    }
+    temps
+  } else if (target == "atemp") {
+    day1x <- day1KNNTrain[,c(2,7,11)]
+    atemp <- day1KNNTrain$atemp
+    atemps <- c()
+    for (i in 1:100) {
+      knnout <- basicKNN(day1x,atemp,c(day1KNNValid[i,2], day1KNNValid[i,7],day1KNNValid[i,11]),3)
+      atemps <- c(atemps, knnout[[2]])
+    }
+    atemps  
+  } else if (target == "hum") {
+    day1x <- day1KNNTrain[,c(3:5,10)]
+    hum <- day1KNNTrain$hum
+    hums <- c()
+    for (i in 1:100) {
+      knnout <- basicKNN(day1x,hum,c(day1KNNValid[i,3], day1KNNValid[i,4], day1KNNValid[i,5], day1KNNValid[i,10]),3)
+      hums <- c(hums, knnout[[2]])
+    }
+    hums
+  } else if (target == "windspeed") {
+    day1x <- day1KNNTrain$hum
+    windspeed <- day1KNNTrain$windspeed
+    speeds <- c()
+    for (i in 1:100) {
+      knnout <- basicKNN(day1x,windspeed,c(day1KNNValid[i,9]),3)
+      speeds <- c(speeds, knnout[[2]])
+    }
+    speeds 
+  } else if (target == "isGood") {
+    day1x <- day1KNNTrain$hum
+    isG <- day1KNNTrain$isGood
+    isGs <- c()
+    for (i in 1:100) {
+      knnout <- basicKNN(day1x,isG,c(day1KNNValid[1,9]),1)
+      isGs <- c(isGs, knnout[[2]])
+    }
+    isGs 
+  } else if (target == "isModerate") {
+    day1x <- day1KNNTrain$hum
+    isM <- day1KNNTrain$isModerate
+    isMs <- c()
+    for (i in 1:100) {
+      knnout <- basicKNN(day1x,isM,c(day1KNNValid[i,9]),1)
+      isMs <- c(isMs, knnout[[2]])
+    }
+    isMs 
+  } else if (target == "isBad") {
+    day1x <- day1KNNTrain$hum
+    isB <- day1KNNTrain$isBad
+    isBs <- c()
+    for (i in 1:100) {
+      knnout <- basicKNN(day1x,isB,c(day1KNNValid[i,9]),1)
+      isBs <- c(isBs, knnout[[2]])
+    }
+    isBs 
   } else {
     print("Invalid target variable")
   }
